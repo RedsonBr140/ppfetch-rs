@@ -1,6 +1,7 @@
 use colorful::{Color, Colorful};
 use rand::Rng;
 use std::env;
+use std::process::Command;
 use sysinfo::{System, SystemExt};
 
 fn main() {
@@ -15,10 +16,16 @@ fn main() {
     let hostname = sys.host_name().unwrap().color(Color::Blue).bold();
     let mut charcount = env::var("USER").unwrap().chars().count();
     let mut line = "─".to_owned();
+    let wm = Command::new("sh")
+        .arg("-c")
+        .arg("wmctrl -m | awk ' /Name/ {print $2}'")
+        .output()
+        .expect("wmctrl not installed.");
+
     let mut i = 0;
-    charcount = charcount + sys.host_name().unwrap().chars().count();
+    charcount += sys.host_name().unwrap().chars().count();
     while i < charcount {
-        line = line + "─";
+        line += "─";
         i += 1;
     }
 
@@ -29,7 +36,7 @@ fn main() {
  __(. .)__   {} {}
  \\__|_|__/   {} {} 
     / \\      {} {} 
-
+             {} {}
  Talking is {}, show me the {}",
             user,
             hostname,
@@ -40,6 +47,8 @@ fn main() {
             kernel,
             "shell:".color(Color::Yellow).bold(),
             shell,
+            "wm:".color(Color::Green).bold(),
+            String::from_utf8_lossy(&wm.stdout),
             "easy".color(Color::Green).bold(),
             "code".color(Color::Red).bold()
         );
@@ -50,7 +59,7 @@ fn main() {
  (  \\,/  )   {} {}
   \\_ | _/    {} {}
   (_/ \\_)    {} {}
-              
+             {} {}
  Talking is {}, show me the {}",
             user,
             hostname,
@@ -61,6 +70,8 @@ fn main() {
             kernel,
             "shell:".color(Color::Yellow).bold(),
             shell,
+            "wm:".color(Color::Green).bold(),
+            String::from_utf8_lossy(&wm.stdout),
             "easy".color(Color::Green).bold(),
             "code".color(Color::Red).bold()
         );
