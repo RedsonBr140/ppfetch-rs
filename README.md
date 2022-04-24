@@ -15,20 +15,20 @@ The ppfetch was created to be a simple, basic, and posix fetch. Now, it's a simp
 
 - [`sh`](https://en.wikipedia.org/wiki/Unix_shell)
 - [`wmctrl`](https://www.freedesktop.org/wiki/Software/wmctrl/)
-- [`Rust`](https://rust-lang.org/)(If you want to compile.)
+- [`Rust`](https://rust-lang.org/)
 
 ## 📥 **Installation**
 
 #### 🔧 Manually
 
-Option 1: using `curl` (release binary)
+<!-- Option 1: using `curl` (release binary)
 ```sh
 curl https://github.com/RedsonBr140/ppfetch-rs/releases/download/v1.1.0/ppfetch-rs > ~/.local/bin/ppfetch-rs
 chmod +x ~/.local/bin/ppfetch-rs
 ```
 (Make sure that you have `~/.local/bin` on your `$PATH`.)
-
-Option 2: Compiling from `source`:
+-->
+Option 1: Compiling from `source`:
 
 ```sh
 git clone https://github.com/RedsonBr140/ppfetch-rs.git
