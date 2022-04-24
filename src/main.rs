@@ -10,7 +10,17 @@ fn main() {
 
     let os = sys.name().unwrap();
     let kernel = sys.kernel_version().unwrap();
-    let shell = env::var("SHELL").unwrap();
+
+    let shell = match env::var("SHELL") {
+        Ok(var) => {
+            let split: Vec<_> = var.split('/').collect();
+            match split.last() {
+                Some(sh) => sh.to_string(),
+                _ => "unknown".to_string(),
+            }
+        }
+        _ => "unknown".to_string(),
+    };
     let random: u32 = rand::thread_rng().gen_range(1..=2);
     let user = env::var("USER").unwrap().color(Color::DeepPink1a);
     let hostname = sys.host_name().unwrap().color(Color::Blue).bold();
@@ -22,11 +32,7 @@ fn main() {
         .arg("wmctrl -m | awk ' /Name/ {print $2}'")
         .output()
         .expect("wmctrl not installed.");
-    let uptime = Command::new("sh")
-        .arg("-c")
-        .arg("uptime -p | sed -n '1p' | sed 's/up //'")
-        .output()
-        .expect("lol");
+    let uptime = format!("{}s", sys.uptime());
     let mut i: usize = 0;
 
     while i < charcount {
@@ -36,53 +42,55 @@ fn main() {
 
     if random < 2 {
         println!(
-            "             {}@{}
+"             {}@{}
    (\\_/)     {}
- __(. .)__   {} {}
- \\__|_|__/   {} {}
-    / \\      {} {}             {} {}
-             {} {}
- Talking is {}, show me the {}", // Sorry for this workaround, idk a better way to do that for now.
+ __(. .)__   {osd} {}
+ \\__|_|__/   {kerneld} {}
+    / \\      {uptd} {}
+             {shd} {}
+             {wmd} {}
+ Talking is {easy}, show me the {code}",
             user,
             hostname,
             line,
-            "os:".color(Color::Red).bold(),
             os,
-            "kernel:".color(Color::Blue).bold(),
             kernel,
-            "uptime:".color(Color::DeepPink1a),
-            String::from_utf8_lossy(&uptime.stdout),
-            "shell:".color(Color::Yellow).bold(),
+            uptime,
             shell,
-            "wm:".color(Color::Green).bold(),
             String::from_utf8_lossy(&wm.stdout),
-            "easy".color(Color::Green).bold(),
-            "code".color(Color::Red).bold()
+            osd ="os:".color(Color::Red).bold(),
+            kerneld = "kernel:".color(Color::Blue).bold(),
+            uptd = "uptime:".color(Color::DeepPink1a),
+            shd = "shell:".color(Color::Yellow).bold(),
+            wmd = "wm:".color(Color::Green).bold(),
+            easy = "easy".color(Color::Green).bold(),
+            code = "code".color(Color::Red).bold()
         );
     } else {
         println!(
-            "             {}@{}
+"             {}@{}
   __   __    {}
- (  \\,/  )   {} {}
-  \\_ | _/    {} {}
-  (_/ \\_)    {} {}             {} {}
-             {} {}
- Talking is {}, show me the {}",
+ (  \\,/  )   {osd} {}
+  \\_ | _/    {kerneld} {}
+  (_/ \\_)    {uptd} {}
+             {shd} {}
+             {wmd} {}
+ Talking is {easy}, show me the {code}",
             user,
             hostname,
             line,
-            "os:".color(Color::Red).bold(),
             os,
-            "kernel:".color(Color::Blue).bold(),
             kernel,
-            "uptime:".color(Color::DeepPink1a),
-            String::from_utf8_lossy(&uptime.stdout),
-            "shell:".color(Color::Yellow).bold(),
+            uptime,
             shell,
-            "wm:".color(Color::Green).bold(),
             String::from_utf8_lossy(&wm.stdout),
-            "easy".color(Color::Green).bold(),
-            "code".color(Color::Red).bold()
+            osd ="os:".color(Color::Red).bold(),
+            kerneld = "kernel:".color(Color::Blue).bold(),
+            uptd = "uptime:".color(Color::DeepPink1a),
+            shd = "shell:".color(Color::Yellow).bold(),
+            wmd = "wm:".color(Color::Green).bold(),
+            easy = "easy".color(Color::Green).bold(),
+            code = "code".color(Color::Red).bold()
         );
     }
 }
