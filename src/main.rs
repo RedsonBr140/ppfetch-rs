@@ -1,4 +1,4 @@
-use colorful::{Color, Colorful};
+mod colors;
 use rand::Rng;
 use std::env;
 use std::process::Command;
@@ -7,10 +7,18 @@ use sysinfo::{System, SystemExt};
 fn main() {
     let mut sys = System::new_all();
     sys.refresh_all();
-
+    const RESET: &str = colors::reset;
+    let osd = format!("{}os:{RESET}", colors::bold::red);
+    let kerneld = format!("{}kernel:{RESET}", colors::bold::blue);
+    let uptd = format!("{}uptime:{RESET}", colors::bold::purple);
+    let shd = format!("{}shell:{RESET}", colors::bold::yellow);
+    let wmd = format!("{}wm:{RESET}", colors::bold::green);
+    let easy = format!("{}easy{RESET}", colors::bold::green);
+    let code = format!("{}code{RESET}", colors::bold::red);
+    let user = format!("{}{}{RESET}", colors::purple, env::var("USER").unwrap());
+    let hostname = format!("{}{}{RESET}", colors::bold::blue, sys.host_name().unwrap());
     let os = sys.name().unwrap();
     let kernel = sys.kernel_version().unwrap();
-
     let shell = match env::var("SHELL") {
         Ok(var) => {
             let split: Vec<_> = var.split('/').collect();
@@ -22,8 +30,6 @@ fn main() {
         _ => "unknown".to_string(),
     };
     let random: u32 = rand::thread_rng().gen_range(1..=2);
-    let user = env::var("USER").unwrap().color(Color::DeepPink1a);
-    let hostname = sys.host_name().unwrap().color(Color::Blue).bold();
     let mut charcount = env::var("USER").unwrap().chars().count();
     charcount += sys.host_name().unwrap().chars().count();
     let mut line = "─".to_owned();
@@ -42,55 +48,27 @@ fn main() {
 
     if random < 2 {
         println!(
-"             {}@{}
-   (\\_/)     {}
- __(. .)__   {osd} {}
- \\__|_|__/   {kerneld} {}
-    / \\      {uptd} {}
-             {shd} {}
+            "             {user}@{hostname}
+   (\\_/)     {line}
+ __(. .)__   {osd} {os}
+ \\__|_|__/   {kerneld} {kernel}
+    / \\      {uptd} {uptime}
+             {shd} {shell}
              {wmd} {}
  Talking is {easy}, show me the {code}",
-            user,
-            hostname,
-            line,
-            os,
-            kernel,
-            uptime,
-            shell,
-            String::from_utf8_lossy(&wm.stdout),
-            osd ="os:".color(Color::Red).bold(),
-            kerneld = "kernel:".color(Color::Blue).bold(),
-            uptd = "uptime:".color(Color::DeepPink1a),
-            shd = "shell:".color(Color::Yellow).bold(),
-            wmd = "wm:".color(Color::Green).bold(),
-            easy = "easy".color(Color::Green).bold(),
-            code = "code".color(Color::Red).bold()
+            String::from_utf8_lossy(&wm.stdout)
         );
     } else {
         println!(
-"             {}@{}
-  __   __    {}
- (  \\,/  )   {osd} {}
-  \\_ | _/    {kerneld} {}
-  (_/ \\_)    {uptd} {}
-             {shd} {}
+            "             {user}@{hostname}
+  __   __    {line}
+ (  \\,/  )   {osd} {os}
+  \\_ | _/    {kerneld} {kernel}
+  (_/ \\_)    {uptd} {uptime}
+             {shd} {shell}
              {wmd} {}
  Talking is {easy}, show me the {code}",
-            user,
-            hostname,
-            line,
-            os,
-            kernel,
-            uptime,
-            shell,
-            String::from_utf8_lossy(&wm.stdout),
-            osd ="os:".color(Color::Red).bold(),
-            kerneld = "kernel:".color(Color::Blue).bold(),
-            uptd = "uptime:".color(Color::DeepPink1a),
-            shd = "shell:".color(Color::Yellow).bold(),
-            wmd = "wm:".color(Color::Green).bold(),
-            easy = "easy".color(Color::Green).bold(),
-            code = "code".color(Color::Red).bold()
+            String::from_utf8_lossy(&wm.stdout)
         );
     }
 }
