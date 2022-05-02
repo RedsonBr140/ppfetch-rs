@@ -44,15 +44,23 @@ cargo install --path .
 ```
 (Make sure that you have `~/.cargo/bin` on your `$PATH`.)
 
+#### 📦 Package manager
+
+For [AUR](https://aur.archlinux.org) users:
+```sh
+yay -S ppfetch-rs-bin # For the release binary.
+yay -S ppfetch-rs-git # If you're redpill and want to compile
+```
 > *If you can and want to port ppfetch-rs to any package manager, feel free to do so.*
 
 ## 📋 Todo
  - [ ] Remove uptime and implement packages count instead.
- - [ ] Port ppfetch-rs to AUR.
+ - [X] Port ppfetch-rs to AUR.
 
 ## 💌 **License**
 
 MIT License
 
 <p align="center">:heart: <code>Keep It Simple, Stupid.</code></p>
+
 
